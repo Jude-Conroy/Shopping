@@ -12,4 +12,6 @@ Maintainer
 Installation
 ------------
 
-This was written in eclipse buy can be run anywhere the main shopping cart class is ShoppingBasket.java the tests are in src\test\java\com\infiniteloop\shopping
+The code was written in eclipse. Only source and pom uploaded. The main shopping cart class is ShoppingBasket.java. The tests are in src\test\java\com\infiniteloop\shopping
+
+Any problems please do get in touch.
