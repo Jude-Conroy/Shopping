@@ -63,7 +63,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.removeItem(apple);
 		
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(BigDecimal.ZERO));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(BigDecimal.ZERO));
 
 		assertTrue(calculated.equals(expected));
 	}
@@ -83,7 +83,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.removeItem(apple2);
 		
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(apple1.getPrice().add(apple3.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(apple1.getPrice().add(apple3.getPrice())));
 
 		//expected
 		assertTrue(calculated.equals(expected));
@@ -99,7 +99,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(apple);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(apple.getPrice()));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(apple.getPrice()));
 
 		//expected
 		assertTrue(calculated.equals(expected));
@@ -119,7 +119,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(apple2);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(apple1.getPrice().add(apple2.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(apple1.getPrice().add(apple2.getPrice())));
 
 		assertTrue(calculated.equals(expected));
 	}
@@ -134,7 +134,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(bannana);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(bannana.getPrice().add(bannana.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(bannana.getPrice().add(bannana.getPrice())));
 
 		assertTrue(calculated.equals(expected));
 	}
@@ -149,7 +149,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(lemon);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(lemon.getPrice().add(lemon.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(lemon.getPrice().add(lemon.getPrice())));
 
 		assertTrue(calculated.equals(expected));
 	}
@@ -164,7 +164,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(orange);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(orange.getPrice().add(orange.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(orange.getPrice().add(orange.getPrice())));
 
 		assertTrue(calculated.equals(expected));
 	}
@@ -179,10 +179,30 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(peach);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(peach.getPrice().add(peach.getPrice())));
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(peach.getPrice().add(peach.getPrice())));
 
 		assertTrue(calculated.equals(expected));
 	}
+	
+	public void testCalculateAppleDiscount() throws ShoppingBasketException {
+
+		shoppingBasket.removeAll();
+		
+		shoppingBasket.setDiscount(new BigDecimal("0.10"));
+		
+		AppleImpl apple = new AppleImpl(ProductPricingData.APPLES_TYPE, productPricing .getProduct(ProductPricingData.APPLES_TYPE, ProductPricingData.BREABURN_NAME));
+		shoppingBasket.addItem(apple);
+
+		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(apple.getPrice().subtract(shoppingBasket.getDiscount())));
+
+		//expected
+		assertTrue(calculated.equals(expected));
+		//test actual
+		assertTrue(calculated.equals(new BigDecimal("0.38")));
+		
+	}
+
 
 	public void testCalculateAll() throws ShoppingBasketException {
 
@@ -201,7 +221,7 @@ public class ShoppingBasketTest extends TestCase {
 		shoppingBasket.addItem(peach);
 
 		BigDecimal calculated = shoppingBasket.calculateGross().getAmount();
-		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatAmountFromGross(apple.getPrice()
+		BigDecimal expected = calculationHelper.returnRoundedValue(calculationHelper.vatGross(apple.getPrice()
 				.add(bannana.getPrice().add(orange.getPrice().add(lemon.getPrice().add(peach.getPrice()))))));
 
 		assertTrue(calculated.equals(expected));
